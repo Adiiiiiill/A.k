@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Fans</title>
+<style>
+:root{
+  --accent:#ff4d78;
+  --purple:#8b5cf6;
+}
+body{
+  margin:0;
+  font-family:Inter,system-ui;
+  background:url('assets/1fe5fae91fa3c7cdcc938ee184b14082.jpg') no-repeat center center fixed;
+  background-size:cover;
+  color:#ddd;
+  padding:12px;
+  animation:zoomBg 40s ease-in-out infinite alternate;
+}
+@keyframes zoomBg {
+  from {background-size:100% 100%;}
+  to {background-size:110% 110%;}
+}
+
+/* soft overlay */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(3px);
+  z-index:-1;
+}
+
+.wrap{
+  max-width:420px;
+  margin:0 auto;
+}
+h1{
+  color:#fff;
+  font-size:20px;
+  margin:6px 0;
+  text-align:center;
+}
+.input,select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.05);
+  color:#fff;
+  margin-top:10px;
+}
+.row{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+.btn{
+  flex:1;
+  padding:12px;
+  border-radius:10px;
+  border:0;
+  background:linear-gradient(90deg,var(--accent),var(--purple));
+  color:#111;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .2s,box-shadow .3s;
+}
+.btn:hover{
+  transform:scale(1.03);
+  box-shadow:0 0 15px var(--purple);
+}
+.upload{
+  margin-top:12px;
+  border:2px dashed rgba(255,255,255,0.15);
+  padding:14px;
+  border-radius:12px;
+  text-align:center;
+  background:rgba(255,255,255,0.03);
+  cursor:pointer;
+  transition:0.3s;
+}
+.upload:hover{
+  background:rgba(255,255,255,0.1);
+}
+canvas{
+  width:100%;
+  border-radius:10px;
+  margin-top:10px;
+  box-shadow:0 0 15px rgba(139,92,246,0.4);
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <h1>💜 Fans Upload</h1>
+
+  <input id="fanName" class="input" placeholder="Your name">
+  <select id="member" class="input">
+    <option value=''>Select member</option>
+    <option>RM</option>
+    <option>Jin</option>
+    <option>Suga</option>
+    <option>J-Hope</option>
+    <option>Jimin</option>
+    <option>V</option>
+    <option>Jungkook</option>
+  </select>
+
+  <div class="upload" id="drop">
+    Tap to choose photo
+    <input id="file" type="file" accept="image/*" style="display:none">
+  </div>
+
+  <canvas id="c"></canvas>
+
+  <div class="row">
+    <button id="save" class="btn">Save Preview</button>
+    <button id="send" class="btn">Send & Reveal</button>
+  </div>
+</div>
+
+<script>
+const drop=document.getElementById('drop'),
+fileInput=document.getElementById('file'),
+canvas=document.getElementById('c'),
+ctx=canvas.getContext('2d');
+let lastData=null;
+
+drop.addEventListener('click',()=>fileInput.click());
+fileInput.addEventListener('change',e=>handleFile(e.target.files[0]));
+
+function handleFile(file){
+  if(!file) return;
+  if(!file.type.startsWith('image/')){
+    alert('Please choose an image'); return;
+  }
+  const img=new Image();
+  img.onload=function(){
+    const maxW = 900;
+    let w=img.width, h=img.height;
+    if(w>maxW){ h = h*(maxW/w); w = maxW; }
+    canvas.width=w;
+    canvas.height=h;
+    ctx.clearRect(0,0,w,h);
+    ctx.drawImage(img,0,0,w,h);
+
+    // Add watermark
+    const text='BTS 💜';
+    const pad=Math.round(w*0.03);
+    const fsize=Math.round(w*0.06);
+    ctx.font = fsize+'px sans-serif';
+    const grad = ctx.createLinearGradient(0,0,w,0);
+    grad.addColorStop(0,'#ff4d78');
+    grad.addColorStop(1,'#8b5cf6');
+    ctx.fillStyle = grad;
+    ctx.textAlign='right';
+    ctx.shadowColor='rgba(139,92,246,0.9)';
+    ctx.shadowBlur=12;
+    ctx.fillText(text, w-pad, h-pad);
+    ctx.shadowBlur=0;
+
+    lastData = canvas.toDataURL('image/png');
+  };
+  img.src = URL.createObjectURL(file);
+}
+
+document.getElementById('save').addEventListener('click',()=>{
+  if(!lastData){alert('Upload a photo first'); return;}
+  const arr = JSON.parse(localStorage.getItem('bts_gallery')||'[]');
+  arr.unshift({src:lastData, time:Date.now()});
+  localStorage.setItem('bts_gallery', JSON.stringify(arr));
+  alert('Saved to local gallery');
+});
+
+document.getElementById('send').addEventListener('click',()=>{
+  if(!lastData){alert('Upload a photo first'); return;}
+  const name=document.getElementById('fanName').value||'Fan';
+  const member=document.getElementById('member').value||'—';
+  const payload={name,member,img:lastData,time:Date.now()};
+  sessionStorage.setItem('fan_payload', JSON.stringify(payload));
+  localStorage.setItem('playMusic','true');
+  location.href='surprise.html';
+});
+</script>
+</body>
+</html>

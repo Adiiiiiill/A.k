@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Secret BTS Gallery 💜</title>
+<style>
+:root {
+  --bg1:#0b0211;
+  --bg2:#1a0030;
+  --accent:#ff4d78;
+  --purple:#8b5cf6;
+}
+body {
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:radial-gradient(circle at top,var(--bg1),var(--bg2));
+  color:#fff;
+  text-align:center;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* HEADER */
+header {
+  padding:16px;
+  font-size:20px;
+  font-weight:700;
+  color:#fff;
+  letter-spacing:1px;
+  background:linear-gradient(90deg,rgba(255,77,120,0.2),rgba(139,92,246,0.2));
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+/* Filter buttons */
+.filters {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  margin:12px;
+}
+.filter-btn {
+  padding:8px 14px;
+  border:none;
+  border-radius:10px;
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+.filter-btn:hover,
+.filter-btn.active {
+  background:linear-gradient(90deg,var(--accent),var(--purple));
+  box-shadow:0 0 12px rgba(139,92,246,0.5);
+}
+
+/* GALLERY GRID */
+.gallery {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px;
+  padding:14px;
+}
+.card {
+  background:rgba(255,255,255,0.05);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 0 10px rgba(139,92,246,0.2);
+  position:relative;
+  transition:transform 0.3s ease;
+}
+.card:hover {
+  transform:scale(1.05);
+  box-shadow:0 0 20px rgba(139,92,246,0.4);
+}
+.card img {
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.card .info {
+  padding:6px;
+  font-size:13px;
+  color:#e5d7ff;
+}
+.card .member {
+  font-weight:600;
+  color:#c084fc;
+}
+.actions {
+  position:absolute;
+  top:8px;
+  right:8px;
+  display:flex;
+  gap:6px;
+}
+.actions button {
+  background:rgba(0,0,0,0.5);
+  border:none;
+  border-radius:6px;
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
+  padding:4px 6px;
+}
+.actions button:hover {
+  background:var(--purple);
+}
+
+/* Secret lock screen */
+#lockScreen {
+  position:fixed;
+  inset:0;
+  background:rgba(10,0,30,0.95);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+}
+#lockScreen h1 {color:#a855f7;font-size:24px;}
+#lockScreen input {
+  padding:10px;
+  margin-top:14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.05);
+  color:#fff;
+  text-align:center;
+  outline:none;
+}
+#lockScreen button {
+  margin-top:12px;
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(90deg,var(--accent),var(--purple));
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+#errorMsg {
+  color:#ff7aa6;
+  font-size:14px;
+  margin-top:8px;
+  display:none;
+}
+
+/* FOOTER */
+footer {
+  margin:16px 0;
+  font-size:13px;
+  color:#aaa;
+}
+</style>
+</head>
+
+<body>
+<div id="lockScreen">
+  <h1>🔒 Secret BTS Gallery</h1>
+  <input type="password" id="code" placeholder="Enter Secret Code">
+  <button onclick="checkCode()">Unlock</button>
+  <div id="errorMsg">❌ Wrong Code!</div>
+</div>
+
+<header>💜 BTS Secret Fan Gallery 💜</header>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-member="all">All</button>
+  <button class="filter-btn" data-member="RM">RM</button>
+  <button class="filter-btn" data-member="Jin">Jin</button>
+  <button class="filter-btn" data-member="Suga">Suga</button>
+  <button class="filter-btn" data-member="J-Hope">J-Hope</button>
+  <button class="filter-btn" data-member="Jimin">Jimin</button>
+  <button class="filter-btn" data-member="V">V</button>
+  <button class="filter-btn" data-member="Jungkook">Jungkook</button>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<footer>Made with 💜 by Adil</footer>
+
+<script>
+// -------- Secret Code Protection ----------
+const correctCode = "Khushi";
+function checkCode(){
+  const val = document.getElementById("code").value.trim().toUpperCase();
+  const err = document.getElementById("errorMsg");
+  if(val === correctCode){
+    document.getElementById("lockScreen").style.display = "none";
+    localStorage.setItem("bts_secret","granted");
+  } else {
+    err.style.display="block";
+    setTimeout(()=>err.style.display="none",2000);
+  }
+}
+
+// Auto-unlock if already granted
+if(localStorage.getItem("bts_secret")==="granted"){
+  document.getElementById("lockScreen").style.display="none";
+}
+
+// -------- Load Gallery ----------
+const gallery = document.getElementById("gallery");
+let items = JSON.parse(localStorage.getItem("bts_gallery")||"[]");
+
+function renderGallery(member="all"){
+  gallery.innerHTML="";
+  let filtered = member==="all"? items : items.filter(x=>x.member===member);
+  if(filtered.length===0){
+    gallery.innerHTML="<p style='color:#ccc'>No uploads yet 💜</p>";
+    return;
+  }
+  filtered.forEach((x,i)=>{
+    const card = document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${x.src}" alt="fan photo">
+      <div class="info">
+        <div><span class="member">${x.member}</span></div>
+        <div>${x.name || "Fan"}</div>
+      </div>
+      <div class="actions">
+        <button title="Download" onclick="downloadImg('${x.src}')">⬇</button>
+        <button title="Share" onclick="shareImg('${x.src}')">💜</button>
+      </div>
+    `;
+    gallery.appendChild(card);
+  });
+}
+
+// Filter buttons
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    renderGallery(btn.dataset.member);
+  });
+});
+
+// Download function
+function downloadImg(url){
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="bts_fan.png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+// Share function (mobile)
+function shareImg(url){
+  fetch(url)
+  .then(res=>res.blob())
+  .then(blob=>{
+    const file=new File([blob],"bts_fan.png",{type:blob.type});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      navigator.share({files:[file], title:"BTS Fan Photo 💜"});
+    } else {
+      downloadImg(url);
+    }
+  });
+}
+
+// Initial render
+renderGallery();
+</script>
+</body>
+</html>

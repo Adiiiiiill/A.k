@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Surprise 💜</title>
+
+<style>
+html,body{
+  height:100%;
+  margin:0;
+}
+body{
+  font-family: Inter, system-ui;
+  background: radial-gradient(circle at top, #2b002b, #000);
+  color:#fff;
+  overflow:hidden;
+  text-align:center;
+}
+.center{
+  position:relative;
+  width:100%;
+  max-width:420px;
+  margin:0 auto;
+  padding-top:60px;
+}
+h1{
+  font-size:20px;
+  margin:0 12px 8px 12px;
+}
+#controls{
+  position:fixed;
+  bottom:14px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+}
+button{
+  background:linear-gradient(90deg,#ff4d78,#8b5cf6);
+  border:0;
+  padding:10px 12px;
+  border-radius:10px;
+  font-weight:700;
+  color:#111;
+  cursor:pointer;
+}
+.drop{
+  position:fixed;
+  width:84px;
+  will-change:transform,opacity;
+}
+@keyframes fall{
+  0%{transform:translateY(-120px);opacity:1}
+  80%{opacity:1}
+  100%{transform:translateY(110vh);opacity:0}
+}
+</style>
+</head>
+
+<body>
+  <div class="center">
+    <h1>You are part of our purple galaxy 💜</h1>
+    <div id="photoWrap" style="margin-top:14px"></div>
+  </div>
+
+  <!-- ✅ Corrected Audio Tag -->
+  <audio id="bg" loop>
+    <source src="assets/BTS - Euphoria (Instrumental) (100 Official).mp3" type="audio/mp3">
+  </audio>
+
+  <div id="controls">
+    <button id="pause">⏸ Pause</button>
+    <button id="download">⬇️ Save</button>
+  </div>
+
+<script>
+const wrap = document.getElementById('photoWrap');
+const music = document.getElementById('bg');
+
+// ✅ Load uploaded image if available
+let payload = null;
+try { payload = JSON.parse(sessionStorage.getItem('fan_payload')); } catch(e){ payload=null; }
+if(payload && payload.img){
+  const img = document.createElement('img');
+  img.src = payload.img;
+  img.style.width = '92%';
+  img.style.borderRadius = '12px';
+  wrap.appendChild(img);
+}
+
+// ✅ Play music if user allowed
+function tryPlay(){
+  if(localStorage.getItem('playMusic')==='true'){
+    localStorage.removeItem('playMusic');
+    music.volume = 0.6;
+    music.play().catch(()=>{});
+  }
+}
+tryPlay();
+
+// ✅ Pause / Play button
+document.getElementById('pause').addEventListener('click', ()=>{
+  if(!music.paused){
+    music.pause();
+    document.getElementById('pause').textContent='▶️ Play';
+  } else {
+    music.play();
+    document.getElementById('pause').textContent='⏸ Pause';
+  }
+});
+
+// ✅ Download photo
+document.getElementById('download').addEventListener('click', ()=>{
+  if(!payload || !payload.img){
+    alert('No image to save');
+    return;
+  }
+  const a = document.createElement('a');
+  a.href = payload.img;
+  a.download = (payload.name || 'fan') + '_bts.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+});
+
+// ✅ BTS members falling animation
+const members = [
+  'rm.jpg','jin.jpg','suga.jpg','jhope.jpg','jimin.jpg','v.jpg','jk.jpg'
+];
+
+function spawn(){
+  const n = document.createElement('img');
+  n.src = 'assets/' + members[Math.floor(Math.random()*members.length)];
+  n.className = 'drop';
+  n.style.left = Math.random()*100 + 'vw';
+  const dur = 3000 + Math.random()*3000;
+  n.style.animation = 'fall '+(dur/1000)+'s linear forwards';
+  n.style.width = (60 + Math.random()*40)+'px';
+  document.body.appendChild(n);
+  setTimeout(()=>{ n.remove(); }, dur+200);
+}
+
+setInterval(spawn, 400);
+for(let i=0;i<6;i++){ setTimeout(spawn, i*200); }
+</script>
+
+</body>
+</html>

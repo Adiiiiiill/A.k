@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About — BTS Fan World 💜</title>
+  <style>
+    :root {
+      --purple: #a855f7;
+      --pink: #ff4d78;
+      --bg1: #0b0211;
+      --bg2: #1a0030;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      text-align: center;
+      min-height: 100vh;
+      background: url('assets/aDILDD.jpg') no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(11, 2, 17, 0.85), rgba(26, 0, 48, 0.85));
+      backdrop-filter: blur(5px);
+      z-index: -1;
+    }
+
+    h1 {
+      color: var(--purple);
+      font-size: 32px;
+      margin-top: 40px;
+      text-shadow: 0 0 10px var(--purple);
+      animation: fadeDown 1s ease-out;
+    }
+
+    h2 {
+      font-weight: 500;
+      color: #d8b4fe;
+      margin-bottom: 25px;
+      font-size: 20px;
+      animation: fadeDown 1.4s ease-out;
+    }
+
+    p {
+      max-width: 720px;
+      margin: 15px auto;
+      line-height: 1.8;
+      color: #e5d7ff;
+      font-size: 16px;
+      animation: fadeIn 1.8s ease-out forwards;
+    }
+
+    a {
+      color: var(--purple);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      color: var(--pink);
+      text-shadow: 0 0 10px var(--pink);
+    }
+
+    .insta {
+      margin-top: 30px;
+      background: rgba(168,85,247,0.2);
+      padding: 14px 20px;
+      border-radius: 14px;
+      display: inline-block;
+      box-shadow: 0 0 15px rgba(168,85,247,0.4);
+      font-size: 16px;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    footer {
+      margin-top: 60px;
+      font-size: 14px;
+      color: #bbb;
+      animation: fadeUp 2s ease-out;
+    }
+
+    .heart {
+      position: fixed;
+      color: #ff69b4;
+      font-size: 16px;
+      animation: floatHearts 8s linear infinite;
+      opacity: 0.8;
+      z-index: -1;
+    }
+
+    @keyframes floatHearts {
+      0% { transform: translateY(100vh) scale(0.6) rotate(0deg); opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 15px rgba(168,85,247,0.4); }
+      to { box-shadow: 0 0 25px rgba(255,77,120,0.5); }
+    }
+
+    /* Music info text */
+    .music-tip {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      font-size: 13px;
+      color: #d8b4fe;
+      opacity: 0.8;
+      background: rgba(168,85,247,0.1);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(168,85,247,0.3);
+      animation: fadeUp 2s ease-out;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>💜 About This Website 💜</h1>
+  <h2>Created by Adil — A True BTS Fan</h2>
+
+  <p>
+    This website is not just a fan project — it’s a small part of my dream.  
+    I created it to bring BTS fans together, to share love, positivity, and creativity 💫  
+    Here, every fan can upload their photo and become a part of the BTS Family online.
+  </p>
+
+  <p>
+    Through this project, I want to show that <strong>passion and technology</strong> can come together —  
+    that even a teenager from a small place can build something global 🌍  
+    Every line of code, every design here represents my respect and love for BTS.
+  </p>
+
+  <p>
+    My goal is to become an <strong>ethical hacker and app developer</strong> —  
+    someone who uses knowledge to create and protect the digital world.  
+    This website is one of my first creative steps in that direction 🚀
+  </p>
+
+  <div class="insta">
+    💜 Follow me on Instagram:  
+    <a href="https://www.instagram.com/itz_adil_089" target="_blank">itz_adil_089</a>
+  </div>
+
+  <footer>
+    <p>Designed & Developed by <strong>Adil</strong> — with love and purple vibes 💜</p>
+  </footer>
+
+  <div class="music-tip">🎵 Tap anywhere to play background music</div>
+
+  <!-- Background music -->
+  <audio id="bgMusic" loop>
+    <source src="assets/Aisa Banna Sawarna Lyrics - Anjum Hussain • aisa banna sawarna mubarak tumhen - Vibe Bird.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    // Floating hearts
+    const colors = ['#ff4d78', '#a855f7', '#c084fc'];
+    setInterval(()=>{
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerHTML = '💜';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (12 + Math.random()*14) + 'px';
+      heart.style.color = colors[Math.floor(Math.random()*colors.length)];
+      heart.style.animationDuration = (6 + Math.random()*4) + 's';
+      document.body.appendChild(heart);
+      setTimeout(()=>heart.remove(), 10000);
+    }, 500);
+
+    // Background music (click once to start)
+    const bg = document.getElementById('bgMusic');
+    let played = false;
+    document.body.addEventListener('click', ()=>{
+      if(!played){
+        bg.volume = 0.4;
+        bg.play().catch(()=>{});
+        played = true;
+        document.querySelector('.music-tip').innerText = '🎵 Music is playing...';
+      }
+    });
+  </script>
+</body>
+</html>

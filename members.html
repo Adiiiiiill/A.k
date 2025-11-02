@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BTS Members 💜</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('assets/bts-on-purple-stage-aesthetic-khlxjtu2135y2npx.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ✨ Soft dark overlay + blur for readability */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(3px);
+      z-index: -1;
+    }
+
+    header {
+      text-align: center;
+      padding: 16px;
+      font-size: 20px;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    /* Compact vertical layout */
+    .members {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .member {
+      position: relative;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transform: translateY(-40px);
+      opacity: 0;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+    }
+
+    .member::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, #a855f7, #d946ef, #a855f7);
+      background-size: 200% 100%;
+      animation: shimmer 2s linear infinite;
+      transition: width 0.5s ease;
+    }
+
+    .member.visible::before {
+      width: 100%;
+    }
+
+    .member.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .member img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .member:hover img {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px 4px #a855f7;
+    }
+
+    .member-name {
+      margin-top: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #e5d7ff;
+    }
+
+    /* Popup */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(10, 0, 30, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 1000;
+      text-align: center;
+    }
+
+    .popup.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .popup img {
+      width: 75%;
+      max-width: 280px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px 5px #b26ef7;
+      animation: glow 1.5s ease infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 12px #9f6ff8; }
+      to { box-shadow: 0 0 25px #c084fc; }
+    }
+
+    .bio {
+      margin-top: 14px;
+      font-size: 14px;
+      color: #e5d7ff;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeUp 1s ease forwards;
+      animation-delay: 0.3s;
+      width: 80%;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #a855f7;
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
+      font-size: 13px;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 0 8px #a855f7;
+      transition: background 0.3s;
+    }
+
+    .close-btn:hover {
+      background: #9333ea;
+    }
+
+    /* Music icon */
+    .music-icon {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid #a855f7;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a855f7;
+      font-size: 16px;
+      animation: rotate 5s linear infinite;
+      z-index: 10;
+    }
+    @keyframes rotate {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="music-icon">🎵</div>
+  <header>💜 BTS Members (Tap To Open Photo) 💜</header>
+
+  <!-- Background music -->
+  <audio id="bgMusic" src="assets/BTS (방탄소년단) 'Dynamite' Official MV.mp3" autoplay loop></audio>
+
+  <div class="members">
+    <div class="member" data-name="RM" data-bio="Leader • Rapper • Producer" data-img="assets/rm.jpg">
+      <img src="assets/rm.jpg" alt="RM">
+      <div class="member-name">RM</div>
+    </div>
+    <div class="member" data-name="Jin" data-bio="Vocalist • Worldwide Handsome" data-img="assets/Jin.jpg">
+      <img src="assets/Jin.jpg" alt="Jin">
+      <div class="member-name">Jin</div>
+    </div>
+    <div class="member" data-name="Suga" data-bio="Rapper • Producer • Songwriter" data-img="assets/suga.jpg">
+      <img src="assets/suga.jpg" alt="Suga">
+      <div class="member-name">Suga</div>
+    </div>
+    <div class="member" data-name="J-Hope" data-bio="Main Dancer • Rapper • Sunshine" data-img="assets/j hope.jpg">
+      <img src="assets/j hope.jpg" alt="J-Hope">
+      <div class="member-name">J-Hope</div>
+    </div>
+    <div class="member" data-name="Jimin" data-bio="Vocalist • Dancer • Charmer" data-img="assets/jimin.jpg">
+      <img src="assets/jimin.jpg" alt="Jimin">
+      <div class="member-name">Jimin</div>
+    </div>
+    <div class="member" data-name="V" data-bio="Vocalist • Visual • Unique Voice" data-img="assets/v.jpg">
+      <img src="assets/v.jpg" alt="V">
+      <div class="member-name">V</div>
+    </div>
+    <div class="member" data-name="Jungkook" data-bio="Main Vocal • Golden Maknae" data-img="assets/jk.jpg">
+      <img src="assets/jk.jpg" alt="Jungkook">
+      <div class="member-name">Jungkook</div>
+    </div>
+  </div>
+
+  <!-- Popup -->
+  <div class="popup" id="popup">
+    <button class="close-btn" onclick="closePopup()">✖</button>
+    <img id="popupImg" src="" alt="">
+    <div class="bio" id="popupBio"></div>
+  </div>
+
+  <script>
+    const members = document.querySelectorAll(".member");
+    const popup = document.getElementById("popup");
+    const popupImg = document.getElementById("popupImg");
+    const popupBio = document.getElementById("popupBio");
+
+    members.forEach(member => {
+      member.addEventListener("click", () => {
+        popupImg.src = member.dataset.img;
+        popupBio.innerHTML = `<strong>${member.dataset.name}</strong><br>${member.dataset.bio}`;
+        popup.classList.add("active");
+      });
+    });
+
+    function closePopup() {
+      popup.classList.remove("active");
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll(".member").forEach(el => observer.observe(el));
+
+    const bgMusic = document.getElementById("bgMusic");
+    document.body.addEventListener("click", () => {
+      if (bgMusic.paused) bgMusic.play();
+    });
+  </script>
+</body>
+</html>

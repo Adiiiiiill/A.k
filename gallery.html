@@ -1,0 +1,240 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Gallery</title><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BTS Fan Gallery 💜</title>
+<style>
+:root {
+  --bg1:#0b0211;
+  --bg2:#1a0030;
+  --accent:#ff4d78;
+  --purple:#8b5cf6;
+  --text:#e5d7ff;
+}
+body {
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:radial-gradient(circle at 30% 20%,#1a0035,#0a0015 80%);
+  color:var(--text);
+  overflow-x:hidden;
+  text-align:center;
+}
+
+/* 💜 Glowing floating dots */
+.bg-dot {
+  position:fixed;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--purple),transparent 60%);
+  opacity:0.3;
+  animation:float 10s infinite ease-in-out;
+  pointer-events:none;
+}
+@keyframes float {
+  0% {transform:translateY(0);}
+  50% {transform:translateY(-40px);}
+  100% {transform:translateY(0);}
+}
+.bg-dot:nth-child(1){top:10%;left:15%;width:120px;height:120px;animation-delay:0s;}
+.bg-dot:nth-child(2){top:50%;left:70%;width:100px;height:100px;animation-delay:2s;}
+.bg-dot:nth-child(3){top:80%;left:30%;width:80px;height:80px;animation-delay:4s;}
+
+/* HEADER */
+header {
+  padding:24px 12px 8px;
+  font-size:26px;
+  font-weight:700;
+  color:#fff;
+  text-shadow:0 0 20px #a855f7;
+  animation:fadeInDown 1.3s ease both;
+}
+@keyframes fadeInDown {
+  from {opacity:0;transform:translateY(-30px);}
+  to {opacity:1;transform:translateY(0);}
+}
+
+/* GALLERY GRID */
+.gallery {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;
+  padding:20px;
+}
+.card {
+  background:rgba(255,255,255,0.06);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 0 20px rgba(139,92,246,0.3);
+  transition:transform 0.4s ease,box-shadow 0.4s ease;
+  backdrop-filter:blur(5px);
+}
+.card:hover {
+  transform:scale(1.05);
+  box-shadow:0 0 35px rgba(168,85,247,0.6);
+}
+.card img {
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.card .info {
+  padding:8px;
+  font-size:14px;
+}
+.card .member {
+  color:#c084fc;
+  font-weight:600;
+}
+.actions {
+  margin-top:6px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+.actions button {
+  border:none;
+  padding:6px 10px;
+  border-radius:8px;
+  background:linear-gradient(90deg,var(--accent),var(--purple));
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+.actions button:hover {
+  background:linear-gradient(90deg,var(--purple),var(--accent));
+}
+
+/* Secret Unlock Section */
+.secret {
+  margin:40px auto 20px;
+  max-width:400px;
+  background:rgba(255,255,255,0.05);
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 0 20px rgba(168,85,247,0.3);
+  animation:fadeUp 1.5s ease;
+}
+@keyframes fadeUp {
+  from {opacity:0;transform:translateY(40px);}
+  to {opacity:1;transform:translateY(0);}
+}
+.secret h3 {
+  color:#ff4d78;
+  margin-bottom:6px;
+}
+.secret input {
+  width:80%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  outline:none;
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+  text-align:center;
+}
+.secret button {
+  margin-top:10px;
+  background:linear-gradient(90deg,var(--accent),var(--purple));
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.secret #msg {
+  display:none;
+  color:#ff7aa6;
+  margin-top:8px;
+}
+
+/* FOOTER */
+footer {
+  margin:30px 0 12px;
+  font-size:13px;
+  color:#aaa;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-dot"></div><div class="bg-dot"></div><div class="bg-dot"></div>
+
+<header>💜 Your BTS Fan Gallery 💜</header>
+
+<div class="gallery" id="gallery"></div>
+
+<!-- 🔒 Secret Unlock Section -->
+<div class="secret">
+  <h3>🔒 Secret Zone{Agar Aap Is section ME 
+    Jana Chahte He To Enter 2nd Password}
+  </h3>
+  <p>Enter your code to reveal hidden collection 💫</p>
+  <input type="password" id="code" placeholder="Enter Secret Code">
+  <button onclick="unlock()">Unlock</button>
+  <div id="msg">❌ Wrong Code!</div>
+</div>
+
+<footer>✨ Made with love by Adil 💜</footer>
+
+<script>
+// ---- Load normal gallery ----
+const gallery = document.getElementById("gallery");
+let items = JSON.parse(localStorage.getItem("bts_gallery")||"[]");
+
+function renderGallery(){
+  gallery.innerHTML = "";
+  if(items.length === 0){
+    gallery.innerHTML = `<p style='color:#ccc;font-size:15px;'>No photos yet — upload from <b>Fans</b> page 💜</p>`;
+    return;
+  }
+  items.forEach(x=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${x.src}">
+      <div class="info">
+        <div class="member">${x.member}</div>
+        <div>${x.name||"Fan"}</div>
+        <div class="actions">
+          <button onclick="downloadImg('${x.src}')">⬇ Save</button>
+          <button onclick="shareImg('${x.src}')">💜 Share</button>
+        </div>
+      </div>`;
+    gallery.appendChild(card);
+  });
+}
+renderGallery();
+
+// ---- Download & Share ----
+function downloadImg(url){
+  const a=document.createElement("a");
+  a.href=url; a.download="bts_fan.png";
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function shareImg(url){
+  fetch(url).then(r=>r.blob()).then(b=>{
+    const f=new File([b],"bts_fan.png",{type:b.type});
+    if(navigator.canShare && navigator.canShare({files:[f]})){
+      navigator.share({files:[f],title:"BTS Fan Photo 💜"});
+    } else downloadImg(url);
+  });
+}
+
+// ---- Secret unlock ----
+function unlock(){
+  const code=document.getElementById("code").value.trim().toUpperCase();
+  const msg=document.getElementById("msg");
+  if(code==="BTSFOREVER"){
+    window.location.href="secret.html"; // go to secret page
+  } else {
+    msg.style.display="block";
+    setTimeout(()=>msg.style.display="none",2000);
+  }
+}
+</script>
+</body>
+</html>
+rid.appendChild(d); }); }</script></div></body></html>
